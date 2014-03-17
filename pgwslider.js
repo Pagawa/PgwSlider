@@ -158,21 +158,21 @@
 			pgwSlider.plugin.find('ul li').css('opacity', '0.6');
 			pgwSlider.plugin.find('ul li.elt_' + elementId).css('opacity', '1');
 
-			if (typeof element.image != 'undefined') {
-				elementContainer.html('<img src="' + element.image + '"/>');
-			} else if (typeof element.thumbnail != 'undefined') {
-				elementContainer.html('<img src="' + element.thumbnail + '"/>');
-			} else {
-				elementContainer.html('');
-			}
-
 			var elementText = '';
 			if (typeof element.title != 'undefined') {
 				elementText += '<b>' + element.title + '</b>';
 			}
+			
+			if (typeof element.image != 'undefined') {
+				elementContainer.html('<img src="' + element.image + '" alt="'+elementText+'">');
+			} else if (typeof element.thumbnail != 'undefined') {
+				elementContainer.html('<img src="' + element.thumbnail + '" alt="'+elementText+'">');
+			} else {
+				elementContainer.html('');
+			}
 
 			if (typeof element.description != 'undefined') {
-				if (elementText != '') elementText += '<br/>';
+				if (elementText != '') elementText += '<br>';
 				elementText += element.description;
 			}
 
