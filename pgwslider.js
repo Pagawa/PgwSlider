@@ -183,9 +183,9 @@
 			if (typeof element.link != 'undefined') {
 				var linkTarget = '';
 				if (typeof element.linkTarget != 'undefined') {
-					var linkTarget = 'target="' + element.linkTarget + '"';
+					var linkTarget = ' target="' + element.linkTarget + '"';
 				}
-				elementContainer.html('<a href="' + element.link + '" ' + linkTarget + '>' + elementContainer.html() + '</a>');
+				elementContainer.html('<a href="' + element.link + '"' + linkTarget + '>' + elementContainer.html() + '</a>');
 			}
 
 			elementContainer.animate({
