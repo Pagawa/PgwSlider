@@ -82,7 +82,7 @@
             if ((typeof elementSpan != 'undefined') && (elementSpan != '')) {
                 element.title = elementSpan;
             } else {
-                var elementTitle = obj.find('img').attr('data-title');
+                var elementTitle = obj.find('img').attr('alt');
                 if ((typeof elementTitle != 'undefined') && (elementTitle != '')) {
                     element.title = elementTitle;
                 }
