@@ -10,7 +10,7 @@
     width: 100%;
 }
 
-.pgwSlider .psCurrent {
+.pgwSlider .ps-current {
     float: left;
     width: 74%;
     overflow: hidden;
@@ -18,10 +18,10 @@
     position: relative;
 }
 
-.pgwSlider .psCurrent span {
+.pgwSlider .ps-current span {
     position: absolute;
     width: 100%;
-    padding: 6px 10px 10px;
+    padding: 8px 10px 10px;
     background: rgba(0, 0, 0, 0.7);
     left: 0;
     bottom: 0;
@@ -29,13 +29,14 @@
     font-size: 1rem;
 }
 
-.pgwSlider .psCurrent img {
+.pgwSlider .ps-current img {
     max-width: 100%;
     min-width: 100%;
     height: auto;
     display: block;
 }
 
+ul.pgwSlider,
 .pgwSlider > ul {
     float: right;
     width: 25%;
@@ -44,6 +45,7 @@
     margin: 0;
 }
 
+ul.pgwSlider > li,
 .pgwSlider > ul > li {
     height: 50px;
     margin-bottom: 6px;
@@ -53,10 +55,12 @@
     filter: alpha(opacity=60);
 }
 
+ul.pgwSlider > li:last-child,
 .pgwSlider > ul > li:last-child {
     margin-bottom: 0;
 }
 
+ul.pgwSlider > li span,
 .pgwSlider > ul > li span {
     display: block;
     width: 100%;
@@ -69,10 +73,12 @@
     text-overflow: ellipsis;
 }
 
+ul.pgwSlider > li:hover,
 .pgwSlider > ul > li:hover {
     opacity: 1 !important;
 }
 
+ul.pgwSlider > li img,
 .pgwSlider > ul > li img {
     width: 100%;
     min-height: 100%;
@@ -80,32 +86,37 @@
 }
 
 @media (max-width: 480px) {
-    .pgwSlider .psCurrent {
+    .pgwSlider .ps-current {
         margin-bottom: 6px;
     }
 
-    .pgwSlider .psCurrent img {
+    .pgwSlider .ps-current img {
         width: 100%;
         min-height: inherit;
     }
 
-    .pgwSlider .psCurrent,
+    .pgwSlider .ps-current,
+    ul.pgwSlider,
     .pgwSlider > ul {
         width: 100%;
     }
 
+    ul.pgwSlider > li,
     .pgwSlider > ul > li {
         float: left;
         min-height: 50px;
         max-height: 70px;
+        min-width: 20%;
     }
 
+    ul.pgwSlider > li span,
     .pgwSlider > ul > li span {
         white-space: nowrap;
     }
 }
 
 @media (min-width: 481px) {
+    ul.pgwSlider > li,
     .pgwSlider > ul > li {
         width: 100% !important;
     }

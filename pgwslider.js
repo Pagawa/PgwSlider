@@ -30,7 +30,7 @@
         pgwSlider.plugin = this;
         pgwSlider.data = [];
         pgwSlider.config = {};
-        pgwSlider.psCurrentNb = 0;
+        pgwSlider.currentNb = 0;
         pgwSlider.nbElements = 0;
         pgwSlider.eventInterval = null;
         pgwSlider.window = $(window);
@@ -107,14 +107,14 @@
         
             // Adjust the height of the main container
             if (typeof animate != 'undefined' && animate) {
-                pgwSlider.plugin.find('.psCurrent').animate({
+                pgwSlider.plugin.find('.ps-current').animate({
                     height: height
                 }, pgwSlider.config.adaptiveDuration, function() {
                     pgwSlider.plugin.find('ul li').animate({ height: elementHeight }, pgwSlider.config.adaptiveDuration);
                 });
                 
             } else {
-                pgwSlider.plugin.find('.psCurrent').css('height', height);
+                pgwSlider.plugin.find('.ps-current').css('height', height);
                 pgwSlider.plugin.find('ul li').css('height', elementHeight);
             }
             
@@ -125,7 +125,10 @@
         var setup = function() {
         
             // Create container
-            pgwSlider.plugin.prepend('<div class="psCurrent"></div>');
+            pgwSlider.plugin.wrap('<div class="pgwSlider"></div>');
+            pgwSlider.plugin = pgwSlider.plugin.parent();
+            pgwSlider.plugin.find('ul').removeClass('pgwSlider');
+            pgwSlider.plugin.prepend('<div class="ps-current"></div>');
             pgwSlider.nbElements = pgwSlider.plugin.find('ul li').length;
 
             // Get slider elements
@@ -175,9 +178,9 @@
         // Display current element
         var displayCurrent = function(elementId, init) {
 
-            pgwSlider.psCurrentNb = elementId;
+            pgwSlider.currentNb = elementId;
             var element = pgwSlider.data[elementId];
-            var elementContainer = pgwSlider.plugin.find('.psCurrent');
+            var elementContainer = pgwSlider.plugin.find('.ps-current');
 
             // Opacify the current element
             elementContainer.animate({
@@ -222,19 +225,19 @@
 
                 // Set the container height
                 elementContainer.find('img').load(function() {
-                    if (typeof pgwSlider.plugin.find('.psCurrent').attr('data-checked') == 'undefined') {
+                    if (typeof pgwSlider.plugin.find('.ps-current').attr('data-checked') == 'undefined') {
                     
-                        var maxHeight = pgwSlider.plugin.find('.psCurrent img').height();
+                        var maxHeight = pgwSlider.plugin.find('.ps-current img').height();
                         updateHeight(maxHeight);
-                        pgwSlider.plugin.find('.psCurrent').attr('data-checked', 'true');
+                        pgwSlider.plugin.find('.ps-current').attr('data-checked', 'true');
                         
                         pgwSlider.window.resize(function() {
-                            var maxHeight = pgwSlider.plugin.find('.psCurrent img').height();
+                            var maxHeight = pgwSlider.plugin.find('.ps-current img').height();
                             updateHeight(maxHeight);
                         });
 
                     } else if (pgwSlider.config.adaptiveHeight) {
-                        var maxHeight = pgwSlider.plugin.find('.psCurrent img').height();
+                        var maxHeight = pgwSlider.plugin.find('.ps-current img').height();
                         updateHeight(maxHeight, true);
                     }
                 });
@@ -256,8 +259,8 @@
                 pgwSlider.eventInterval = setInterval(function() {
                     var maxNb = pgwSlider.nbElements - 1;
                     
-                    if (pgwSlider.psCurrentNb + 1 <= maxNb) {
-                        var nextNb = pgwSlider.psCurrentNb + 1;
+                    if (pgwSlider.currentNb + 1 <= maxNb) {
+                        var nextNb = pgwSlider.currentNb + 1;
                     } else {
                         var nextNb = 0;
                     }
