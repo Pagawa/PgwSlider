@@ -96,7 +96,7 @@
 
     .pgwSlider > ul > li {
         float: left;
-        min-height: 75px;
+        max-height: 70px;
     }
 
     .pgwSlider > ul > li span {
