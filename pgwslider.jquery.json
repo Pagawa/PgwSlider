@@ -1,0 +1,34 @@
+{
+    "name": "pgwslider",
+    "title": "PgwSlider",
+    "description": "Responsive slider for jQuery",
+    "keywords": [
+        "slider",
+        "slideshow",
+        "gallery",
+        "responsive",
+        "mobile"
+    ],
+    "version": "1.1.0",
+    "author": {
+        "name": "Jonathan M. Piat"
+    },
+    "maintainers": [
+        {
+            "name": "Jonathan M. Piat"
+        }
+    ],
+    "licenses": [
+        {
+        "type": "MIT",
+        "url": "http://opensource.org/licenses/MIT"
+        }
+    ],
+    "bugs": "https://github.com/Pagawa/PgwSlider/issues",
+    "homepage": "http://pgwjs.com/pgwslider",
+    "docs": "http://pgwjs.com/pgwslider",
+    "download": "http://pgwjs.com/pgwslider",
+    "dependencies": {
+        "jquery": ">=1"
+    }
+}
