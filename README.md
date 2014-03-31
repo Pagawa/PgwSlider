@@ -3,6 +3,13 @@ PgwSlider
 
 An example and the full API documentation are available at [PgwJS.com](http://pgwjs.com/pgwslider/).
 
+
+Requirements
+---------
+
+jQuery 1.0 or Zepto.js 1.0 (minimal version)
+
+
 Changelog
 ---------
 
