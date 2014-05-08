@@ -1,10 +1,10 @@
 /**
- * PgwSlider - Version 1.1
+ * PgwSlider - Version 1.2
  *
  * Copyright 2014, Jonathan M. Piat
  * http://pgwjs.com - http://pagawa.com
  * 
- * Released under the MIT license - http://opensource.org/licenses/MIT
+ * Released under the GNU GPLv3 license - http://opensource.org/licenses/gpl-3.0
  */
 ;(function($){
     $.fn.pgwSlider = function(options) {
@@ -26,19 +26,19 @@
             return this;
         }
 
-        var pgwSlider = {};
+        var pgwSlider = this;
         pgwSlider.plugin = this;
         pgwSlider.data = [];
         pgwSlider.config = {};
-        pgwSlider.currentNb = 0;
-        pgwSlider.nbElements = 0;
+        pgwSlider.currentSlide = 0;
+        pgwSlider.slideCount = 0;
         pgwSlider.eventInterval = null;
         pgwSlider.window = $(window);
 
         // Init
         var init = function() {
         
-            // Merge the user options with the defaults config
+            // Merge user options with the default configuration
             pgwSlider.config = $.extend({}, defaults, options);
 
             // Setup
@@ -98,11 +98,11 @@
         };
 
         // Update the current height
-        var updateHeight = function(height, animate) {  
+        var updateHeight = function(height, animate) {
 
             // Adjust the height of the right list items
-            var elementHeight = ((height - ((pgwSlider.nbElements - 1) * 6)) / pgwSlider.nbElements);
-            var elementWidth = (100 / pgwSlider.nbElements);
+            var elementHeight = ((height - ((pgwSlider.slideCount - 1) * 6)) / pgwSlider.slideCount);
+            var elementWidth = (100 / pgwSlider.slideCount);
             pgwSlider.plugin.find('ul li').css({ width: elementWidth + '%' });
         
             // Adjust the height of the main container
@@ -127,12 +127,11 @@
             // Create container
             pgwSlider.plugin.wrap('<div class="pgwSlider"></div>');
             pgwSlider.plugin = pgwSlider.plugin.parent();
-            pgwSlider.plugin.find('ul').removeClass('pgwSlider');
             pgwSlider.plugin.prepend('<div class="ps-current"></div>');
-            pgwSlider.nbElements = pgwSlider.plugin.find('ul li').length;
+            pgwSlider.slideCount = pgwSlider.plugin.find('ul li').length;
 
             // Get slider elements
-            var elementId = 0;
+            var elementId = 1;
             pgwSlider.plugin.find('ul li').each(function() {
                 var element = getElement($(this));
                 element.id = elementId;
@@ -170,17 +169,23 @@
             }
 
             // Display the first element
-            displayCurrent(0, true);
+            displayCurrent(1);
             
             return true;
         };
 
         // Display current element
-        var displayCurrent = function(elementId, init) {
+        var displayCurrent = function(elementId, apiController) {
 
-            pgwSlider.currentNb = elementId;
-            var element = pgwSlider.data[elementId];
+            var element = pgwSlider.data[elementId - 1];
             var elementContainer = pgwSlider.plugin.find('.ps-current');
+        
+            if (typeof element == 'undefined') {
+                throw new Error('PgwSlider - The element ' + elementId + ' is undefined');
+                return false;
+            }
+
+            pgwSlider.currentSlide = elementId;
 
             // Opacify the current element
             elementContainer.animate({
@@ -247,33 +252,136 @@
                     opacity : 1,
                 }, pgwSlider.config.transitionDuration);
             });
+
+            // Reset interval to avoid a half interval after an API control
+            if (typeof apiController != 'undefined' && pgwSlider.config.autoSlide) {
+                activateInterval();
+            }
             
             return true;
         };
 
         // Activate interval
         var activateInterval = function() {
+            clearInterval(pgwSlider.eventInterval);
         
-            if (pgwSlider.nbElements > 1 && pgwSlider.config.autoSlide) {
-            
-                pgwSlider.eventInterval = setInterval(function() {
-                    var maxNb = pgwSlider.nbElements - 1;
-                    
-                    if (pgwSlider.currentNb + 1 <= maxNb) {
-                        var nextNb = pgwSlider.currentNb + 1;
+            if (pgwSlider.slideCount > 1 && pgwSlider.config.autoSlide) {            
+                pgwSlider.eventInterval = setInterval(function() {               
+                    if (pgwSlider.currentSlide + 1 <= pgwSlider.slideCount) {
+                        var nextItem = pgwSlider.currentSlide + 1;
                     } else {
-                        var nextNb = 0;
+                        var nextItem = 1;
                     }
-                    
-                    displayCurrent(nextNb);
-                    
+                    displayCurrent(nextItem);                    
                 }, pgwSlider.config.intervalDuration);
             }
             
             return true;
+        };    
+       
+        // Start auto slide
+        pgwSlider.startSlide = function() {
+            pgwSlider.config.autoSlide = true;
+            activateInterval();
+            return true;
+        };
+        
+        // Stop auto slide
+        pgwSlider.stopSlide = function() {
+            pgwSlider.config.autoSlide = false;
+            clearInterval(pgwSlider.eventInterval);
+            return true;
+        };
+        
+        // Get current slide
+        pgwSlider.getCurrentSlide = function() {
+            return pgwSlider.currentSlide;
         };
 
+        // Get slide count
+        pgwSlider.getSlideCount = function() {
+            return pgwSlider.slideCount;
+        };
+       
+        // Display slide
+        pgwSlider.displaySlide = function(itemId) {
+            displayCurrent(itemId, true);
+            return true;
+        };
+        
+        // Next slide
+        pgwSlider.nextSlide = function() {
+            if (pgwSlider.currentSlide + 1 <= pgwSlider.slideCount) {
+                var nextItem = pgwSlider.currentSlide + 1;
+            } else {
+                var nextItem = 1;
+            }
+            displayCurrent(nextItem, true);
+            return true;
+        };
+        
+        // Previous slide
+        pgwSlider.previousSlide = function() {
+            if (pgwSlider.currentSlide - 1 >= 1) {
+                var previousItem = pgwSlider.currentSlide - 1;
+            } else {
+                var previousItem = pgwSlider.slideCount;
+            }
+            displayCurrent(previousItem, true);
+            return true;
+        };
+        
+        // Destroy slider
+        pgwSlider.destroy = function(soft) {
+            clearInterval(pgwSlider.eventInterval);
+            
+            pgwSlider.plugin.find('ul li').each(function() {
+                $(this).unbind('click');
+            });
+
+            pgwSlider.data = [];
+            pgwSlider.config = {};
+            pgwSlider.currentSlide = 0;
+            pgwSlider.slideCount = 0;
+            pgwSlider.eventInterval = null;
+            pgwSlider.window = null;
+
+            if (typeof soft != 'undefined') {              
+                pgwSlider.plugin.find('.ps-current').unwrap().remove();
+                pgwSlider.hide();
+            } else {
+                pgwSlider.parent().remove();
+            }
+            
+            return true;
+        };
+        
+        // Reload slider
+        pgwSlider.reload = function(newOptions) {
+            pgwSlider.destroy(true);
+
+            pgwSlider = this;
+            pgwSlider.plugin = this;
+            pgwSlider.window = $(window);
+            pgwSlider.plugin.show();
+            
+            // Merge new options with the default configuration
+            pgwSlider.config = $.extend({}, defaults, newOptions);
+
+            // Setup
+            setup();
+
+            // Activate interval
+            if (pgwSlider.config.autoSlide) {
+                activateInterval();
+            }
+
+            return true;
+        };
+        
+        // Slider initialization
         init();
+        
         return this;
     }
 })(jQuery);

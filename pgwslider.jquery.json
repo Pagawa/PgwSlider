@@ -9,7 +9,7 @@
         "responsive",
         "mobile"
     ],
-    "version": "1.1.0",
+    "version": "1.2.0",
     "author": {
         "name": "Jonathan M. Piat"
     },
@@ -20,8 +20,8 @@
     ],
     "licenses": [
         {
-        "type": "MIT",
-        "url": "http://opensource.org/licenses/MIT"
+            "type": "GNU GPLv3",
+            "url": "http://opensource.org/licenses/gpl-3.0"
         }
     ],
     "bugs": "https://github.com/Pagawa/PgwSlider/issues",

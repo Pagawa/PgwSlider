@@ -1,10 +1,10 @@
 /**
- * PgwSlider - Version 1.1
+ * PgwSlider - Version 1.2
  *
  * Copyright 2014, Jonathan M. Piat
  * http://pgwjs.com - http://pagawa.com
  *
- * Released under the MIT license - http://opensource.org/licenses/MIT
+ * Released under the GNU GPLv3 license - http://opensource.org/licenses/gpl-3.0
  */
 .pgwSlider {
     width: 100%;
@@ -85,6 +85,13 @@ ul.pgwSlider > li img,
     display: block;
 }
 
+@media (min-width: 481px) {
+    ul.pgwSlider > li,
+    .pgwSlider > ul > li {
+        width: 100% !important;
+    }
+}
+
 @media (max-width: 480px) {
     .pgwSlider .ps-current {
         margin-bottom: 6px;
@@ -112,12 +119,5 @@ ul.pgwSlider > li img,
     ul.pgwSlider > li span,
     .pgwSlider > ul > li span {
         white-space: nowrap;
-    }
-}
-
-@media (min-width: 481px) {
-    ul.pgwSlider > li,
-    .pgwSlider > ul > li {
-        width: 100% !important;
     }
 }
