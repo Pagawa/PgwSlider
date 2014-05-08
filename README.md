@@ -19,8 +19,9 @@ All any issues or pull requests must be submitted through GitHub.
 * To make a pull request, please create a new branch for each feature or issue.
 
 
-Changelog
+ChangeLog
 ---------
 
-* 2014-03-22 - Even simpler initialization and the "Data-title" parameter becomes "alt".  
-* 2014-03-21 - Cleaning code and adding new options - Minor update (Version 1.1).  
+* 2014-05-09 - Slider API with 9 new functions. View details on [PgwJS.com](http://pgwjs.com/pgwslider/) (Version 1.2)
+* 2014-03-22 - Even simpler initialization and the "Data-title" parameter becomes "alt"
+* 2014-03-21 - Cleaning code and adding new options (Version 1.1)
