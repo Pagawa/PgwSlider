@@ -1,5 +1,5 @@
 /**
- * PgwSlider - Version 1.2
+ * PgwSlider - Version 1.2.2
  *
  * Copyright 2014, Jonathan M. Piat
  * http://pgwjs.com - http://pagawa.com
@@ -16,6 +16,7 @@
     overflow: hidden;
     height: inherit;
     position: relative;
+    font-size: 1rem;
 }
 
 .pgwSlider .ps-current span {
@@ -26,7 +27,6 @@
     left: 0;
     bottom: 0;
     color: #fff;
-    font-size: 1rem;
 }
 
 .pgwSlider .ps-current img {
@@ -53,6 +53,7 @@ ul.pgwSlider > li,
     position: relative;
     opacity: 0.6;
     filter: alpha(opacity=60);
+    font-size: 0.8rem;
 }
 
 ul.pgwSlider > li:last-child,
@@ -95,6 +96,7 @@ ul.pgwSlider > li img,
 @media (max-width: 480px) {
     .pgwSlider .ps-current {
         margin-bottom: 6px;
+        font-size: 0.9rem;
     }
 
     .pgwSlider .ps-current img {
