@@ -13,7 +13,7 @@ jQuery 1.0 or Zepto.js 1.0 (minimal version)
 Contributing
 ---------
 
-All any issues or pull requests must be submitted through GitHub.
+All issues or pull requests must be submitted through GitHub.
 
 * To report an issue or a feature request, please use [GitHub Issues](https://github.com/Pagawa/PgwSlider/issues).
 * To make a pull request, please create a new branch for each feature or issue.
