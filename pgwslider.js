@@ -1,5 +1,5 @@
 /**
- * PgwSlider - Version 1.2.2
+ * PgwSlider - Version 1.3
  *
  * Copyright 2014, Jonathan M. Piat
  * http://pgwjs.com - http://pagawa.com
@@ -186,6 +186,16 @@
             }
 
             pgwSlider.currentSlide = elementId;
+            
+            // Fix for Zepto
+            if (typeof elementContainer.animate == 'undefined') {
+                elementContainer.animate = function(css, duration, callback) {
+                    elementContainer.css(css);
+                    if (callback) {
+                        callback();
+                    }
+                }
+            }
 
             // Opacify the current element
             elementContainer.animate({
@@ -229,8 +239,8 @@
                 }
 
                 // Set the container height
-                elementContainer.find('img').load(function() {
-                    if (typeof pgwSlider.plugin.find('.ps-current').attr('data-checked') == 'undefined') {
+                elementContainer.find('img').on('load', function() {
+                    if (typeof pgwSlider.plugin.find('.ps-current').attr('data-checked') == 'undefined' || pgwSlider.plugin.find('.ps-current').attr('data-checked') == null) {
                     
                         var maxHeight = pgwSlider.plugin.find('.ps-current img').height();
                         updateHeight(maxHeight);
@@ -384,4 +394,4 @@
         
         return this;
     }
-})(jQuery);
+})(window.Zepto || window.jQuery);
