@@ -22,6 +22,7 @@ All issues or pull requests must be submitted through GitHub.
 ChangeLog
 ---------
 
+* 2014-08-01 - Optimization of animation transition (Version 1.4)
 * 2014-07-02 - Fixes for Zepto (Version 1.3)
 * 2014-05-29 - CSS fixes (Version 1.2.2)
 * 2014-05-09 - Slider API with 9 new functions. View details on [PgwJS.com](http://pgwjs.com/pgwslider/) (Version 1.2)
