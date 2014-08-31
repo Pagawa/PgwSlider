@@ -8,6 +8,14 @@
  */
 .pgwSlider {
     width: 100%;
+    font-family: sans-serif;
+    color: #fff;
+}
+
+.pgwSlider a{
+    display: block;
+    text-decoration: none;
+    color: #fff;
 }
 
 .pgwSlider .ps-current {
@@ -19,14 +27,23 @@
     font-size: 1rem;
 }
 
-.pgwSlider .ps-current span {
+.pgwSlider.listOnTheLeft .ps-current {
+    float: right;
+}
+
+.pgwSlider .ps-current ul {
+    width: 100%;
+}
+
+.pgwSlider .ps-caption {
     position: absolute;
     width: 100%;
-    padding: 8px 10px 10px;
+    padding: 12px;
     background: rgba(0, 0, 0, 0.7);
     left: 0;
     bottom: 0;
-    color: #fff;
+    display: none;
+    z-index: 3;
 }
 
 .pgwSlider .ps-current img {
@@ -37,7 +54,7 @@
 }
 
 ul.pgwSlider,
-.pgwSlider > ul {
+.pgwSlider  ul {
     float: right;
     width: 25%;
     padding: 0;
@@ -45,8 +62,13 @@ ul.pgwSlider,
     margin: 0;
 }
 
+ul.pgwSlider.listOnTheLeft,
+.pgwSlider.listOnTheLeft > ul {
+    float: left;
+}
+
 ul.pgwSlider > li,
-.pgwSlider > ul > li {
+.pgwSlider > .ps-list > li {
     height: 50px;
     margin-bottom: 6px;
     overflow: hidden;
@@ -62,16 +84,16 @@ ul.pgwSlider > li:last-child,
 }
 
 ul.pgwSlider > li span,
-.pgwSlider > ul > li span {
+.pgwSlider > .ps-list > li span {
     display: block;
     width: 100%;
     position: absolute;
     bottom: 0;
-    padding: 3px 0 5px 5px;
-    color: #fff;
+    padding: 5px;
     background: rgba(0, 0, 0, 0.7);
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 ul.pgwSlider > li:hover,
@@ -96,7 +118,7 @@ ul.pgwSlider > li img,
 @media (max-width: 480px) {
     .pgwSlider .ps-current {
         margin-bottom: 6px;
-        font-size: 0.9rem;
+        font-size: 0.8rem;
     }
 
     .pgwSlider .ps-current img {
@@ -111,15 +133,21 @@ ul.pgwSlider > li img,
     }
 
     ul.pgwSlider > li,
-    .pgwSlider > ul > li {
+    .pgwSlider > .ps-list > li {
         float: left;
         min-height: 50px;
         max-height: 70px;
-        min-width: 20%;
+        min-width: 15%;
+        font-size: 0.7rem;
+        margin-bottom: 0;
     }
-
-    ul.pgwSlider > li span,
-    .pgwSlider > ul > li span {
-        white-space: nowrap;
+    
+    ul.pgwSlider.listOnTheLeft > li,
+    .pgwSlider.listOnTheLeft > ul > li {
+        float: right;
+    }
+    
+    .pgwSlider .ps-caption {
+        padding: 8px;
     }
 }

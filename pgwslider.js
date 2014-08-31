@@ -8,12 +8,26 @@
  */
 ;(function($){
     $.fn.pgwSlider = function(options) {
+    
+    
+    
+    
+    ////////////
+        // add callback before / after slide
+    ////////////
+    
+    
+    
 
         var defaults = {
+            mainClassName : 'pgwSlider',
+            listPosition : 'right',
+            selectionMode : 'click',
+            maxHeight : 300,
             autoSlide : true,
             adaptiveHeight : false,
-            adaptiveDuration : 400,
-            transitionDuration : 400,
+            adaptiveDuration : 200,
+            transitionDuration : 600,
             intervalDuration : 3000
         };
 
@@ -79,7 +93,7 @@
 
             // Get title 
             var elementSpan = obj.find('span').text();
-            if ((typeof elementSpan != 'undefined') && (elementSpan != '')) {
+            if ((typeof elementSpan != 'undefined') && (elementSpan != '') && (elementSpan != null)) {
                 element.title = elementSpan;
             } else {
                 var elementTitle = obj.find('img').attr('alt');
@@ -101,23 +115,32 @@
         var updateHeight = function(height, animate) {
 
             // Adjust the height of the right list items
-            var elementHeight = ((height - ((pgwSlider.slideCount - 1) * 6)) / pgwSlider.slideCount);
+            var elementHeight = ((height - ((pgwSlider.slideCount - 1) * 6)) / pgwSlider.slideCount);            
             var elementWidth = (100 / pgwSlider.slideCount);
-            pgwSlider.plugin.find('ul li').css({ width: elementWidth + '%' });
+            pgwSlider.plugin.find('.ps-list > li').css({ width: elementWidth + '%' });
 
             // Adjust the height of the main container
             if (typeof animate != 'undefined' && animate) {
                 pgwSlider.plugin.find('.ps-current').animate({
                     height: height
                 }, pgwSlider.config.adaptiveDuration, function() {
-                    pgwSlider.plugin.find('ul li').animate({ height: elementHeight }, pgwSlider.config.adaptiveDuration);
+                    pgwSlider.plugin.find('.ps-list > li').animate({ height: elementHeight }, pgwSlider.config.adaptiveDuration);
                 });
 
             } else {
                 pgwSlider.plugin.find('.ps-current').css('height', height);
-                pgwSlider.plugin.find('ul li').css('height', elementHeight);
+                pgwSlider.plugin.find('.ps-list > li').css('height', elementHeight);
             }
 
+            
+            /*
+            $('.ps-list li').each(function(){
+  blu = Math.round(($(this).find('img').height() - $(this).height()) / 2);
+  console.log(blu);
+  $(this).find('img').css('margin-top', -blu);
+});
+            */            
+            
             return true;
         };
 
@@ -125,20 +148,26 @@
         var setup = function() {
 
             // Create container
-            pgwSlider.plugin.wrap('<div class="pgwSlider"></div>');
+            pgwSlider.plugin.removeClass(pgwSlider.config.mainClassName).addClass('ps-list');
+            pgwSlider.plugin.wrap('<div class="' + pgwSlider.config.mainClassName + '"></div>');
             pgwSlider.plugin = pgwSlider.plugin.parent();
-            pgwSlider.plugin.prepend('<div class="ps-current"></div>');
-            pgwSlider.slideCount = pgwSlider.plugin.find('ul li').length;
+            pgwSlider.plugin.prepend('<div class="ps-current"><ul></ul><span class="ps-caption"></span></div>');
+            pgwSlider.slideCount = pgwSlider.plugin.find('.ps-list > li').length;
+            
+            if (pgwSlider.slideCount == 0) {
+                return false;
+            }
 
             // Get slider elements
             var elementId = 1;
-            pgwSlider.plugin.find('ul li').each(function() {
+            pgwSlider.plugin.find('.ps-list > li').each(function() {
                 var element = getElement($(this));
                 element.id = elementId;
                 pgwSlider.data.push(element);
 
                 $(this).addClass('elt_' + element.id);
 
+                // Check element title
                 if (element.title) {
                     if ($(this).find('span').length == 1) {
                         if ($(this).find('span').text() == '') {
@@ -148,15 +177,48 @@
                         $(this).find('img').after('<span>' + element.title + '</span>');
                     }
                 }
-
-                // Disable native links in the right list
-                $(this).css('cursor', 'pointer').click(function(event) {
-                    event.preventDefault();
-                    displayCurrent(element.id);
-                });
                 
+                // Set element in the current list
+                var currentElement = $('<li class="elt_' + elementId + '" style="position:absolute; width:100%; z-index:1; opacity: 0; display:none;"></li>');
+
+                if (element.image) {
+                    currentElement.html('<img src="' + element.image + '" alt="' + (element.title ? element.title : '') + '">');
+                } else if (element.thumbnail) {
+                    currentElement.html('<img src="' + element.thumbnail + '" alt="' + (element.title ? element.title : '') + '">');
+                }
+
+                if (element.link) {
+                    currentElement.html('<a href="' + element.link + '"' + (element.linkTarget ? ' target="' + element.linkTarget + '"' : '') + '>' + currentElement.html() + '</a>');
+                }
+
+                pgwSlider.plugin.find('.ps-current > ul').append(currentElement);
+
+                // Set selection mode
+                if (pgwSlider.config.selectionMode == 'mouseOver') {
+                    $(this).css('cursor', 'default').click(function(event) {
+                        event.preventDefault();
+                    }).bind('mouseenter', function(event) {
+                        displayElement(element.id);
+                    });
+                    $(this).find('a').css('cursor', 'default');
+                } else {
+                    $(this).css('cursor', 'pointer').click(function(event) {
+                        event.preventDefault();
+                        displayElement(element.id);
+                    });
+                }
+
+
+//   max-height:'+ pgwSlider.config.maxHeight +'px; overflow:hidden
+// virer max-height + overflow si maxHeight == false ou null;
+
                 elementId++;
             });
+
+            // Set list position
+            if (pgwSlider.config.listPosition == 'left') {
+                pgwSlider.plugin.addClass('listOnTheLeft');
+            }
 
             // Attach slide events
             if (pgwSlider.config.autoSlide) {
@@ -169,57 +231,107 @@
             }
 
             // Display the first element
-            displayCurrent(1);
+            pgwSlider.currentSlide = 1;
+            displayElement(1);
+
+            // Set the first height
+            pgwSlider.plugin.find('.ps-current > ul > li.elt_1 > img').on('load', function() {
+                var maxHeight = pgwSlider.plugin.find('.ps-current > ul > li.elt_1 > img').height();
+                updateHeight(maxHeight);             
+            });
+
+            
+            
+            
+// todo:  add timeout pr ne le faire qu'a la fin et pas X fois, ce qui rend l'effet naze
+
+
+
+            pgwSlider.window.resize(function() {
+                var maxHeight = pgwSlider.plugin.find('.ps-current .elt_' + pgwSlider.currentSlide + ' img').height();
+                updateHeight(maxHeight, pgwSlider.config.adaptiveHeight);
+            });
 
             return true;
         };
 
-        // Display current element
-        var displayCurrent = function(elementId, apiController) {
+        // Display the current element
+        var displayElement = function(elementId, apiController) {
 
             var element = pgwSlider.data[elementId - 1];
-            var elementContainer = pgwSlider.plugin.find('.ps-current');
+            var elementContainer = pgwSlider.plugin.find('.ps-current > ul');
 
             if (typeof element == 'undefined') {
                 throw new Error('PgwSlider - The element ' + elementId + ' is undefined');
                 return false;
             }
 
-            pgwSlider.currentSlide = elementId;
+            // Display new element
+            pgwSlider.plugin.find('.ps-list > li').css('opacity', '0.6');
+            pgwSlider.plugin.find('.ps-list > li.elt_' + elementId).css('opacity', '1');
+            
+            
+// todo: add transition en css ???
 
-            // Fix for Zepto
-            if (typeof elementContainer.animate == 'undefined') {
-                elementContainer.animate = function(css, duration, callback) {
-                    elementContainer.css(css);
+
+            elementContainer.find('li').not('.elt_' + pgwSlider.currentSlide).not('.elt_' + elementId).each(function(){
+                if (typeof $(this).stop == 'function') {
+                    $(this).stop();
+                }
+                $(this).css('position', '').css('z-index', 1).hide();
+            });
+
+            if (typeof pgwSlider.plugin.find('.ps-current > span').fadeOut == 'function') {
+                pgwSlider.plugin.find('.ps-current > span').fadeOut(pgwSlider.config.transitionDuration / 2);
+            } else {
+                pgwSlider.plugin.find('.ps-current > span').hide();
+            }
+
+            // Current element
+            var currentElement = elementContainer.find('.elt_' + pgwSlider.currentSlide);
+
+            if (typeof currentElement.animate != 'function') {
+                currentElement.animate = function(css, duration, callback) {
+                    currentElement.css(css);
                     if (callback) {
                         callback();
                     }
-                }
+                };
             }
 
-            // Disables previous animations
-            if (typeof elementContainer.stop == 'function') {
-                elementContainer.stop();
+            if (typeof currentElement.stop == 'function') {
+                currentElement.stop();
             }
 
-            // Opacify the current element
-            elementContainer.animate({
+            currentElement.css('position', 'absolute').animate({
                 opacity : 0,
             }, pgwSlider.config.transitionDuration, function() {
+                currentElement.css('position', '').css('z-index', 1).hide();
+                pgwSlider.currentSlide = elementId;
+            });
 
-                pgwSlider.plugin.find('ul li').css('opacity', '0.6');
-                pgwSlider.plugin.find('ul li.elt_' + elementId).css('opacity', '1');
+            // Next element
+            var nextElement = elementContainer.find('.elt_' + elementId);
 
-                // Create image
-                if (element.image) {
-                    elementContainer.html('<img src="' + element.image + '" alt="' + (element.title ? element.title : '') + '">');
-                } else if (element.thumbnail) {
-                    elementContainer.html('<img src="' + element.thumbnail + '" alt="' + (element.title ? element.title : '') + '">');
-                } else {
-                    elementContainer.html('');
-                }
+            if (typeof nextElement.animate != 'function') {
+                nextElement.animate = function(css, duration, callback) {
+                    nextElement.css(css);
+                    if (callback) {
+                        callback();
+                    }
+                };
+            }
 
-                // Create caption
+            if (typeof nextElement.stop == 'function') {
+                nextElement.stop();
+            }
+
+            nextElement.css('position', 'absolute').show().animate({
+                opacity : 1,
+            }, pgwSlider.config.transitionDuration, function() {
+                nextElement.css('position', '').css('z-index', 2).show();
+
+                // Element caption
                 var elementText = '';
                 if (element.title) {
                     elementText += '<b>' + element.title + '</b>';
@@ -231,41 +343,22 @@
                 }
 
                 if (elementText != '') {
-                    elementContainer.append('<span>' + elementText + '</span>');
-                }
-
-                // Check if the element has a link
-                if (element.link) {
-                    var linkTarget = '';
-                    if (element.linkTarget) {
-                        var linkTarget = ' target="' + element.linkTarget + '"';
+                    if (element.link) {
+                        elementText = '<a href="' + element.link + '"' + (element.linkTarget ? ' target="' + element.linkTarget + '"' : '') + '>' + elementText + '</a>';
                     }
-                    elementContainer.html('<a href="' + element.link + '"' + linkTarget + '>' + elementContainer.html() + '</a>');
+
+                    if (typeof pgwSlider.plugin.find('.ps-current > span').fadeOut == 'function') {
+                        pgwSlider.plugin.find('.ps-current > span').html(elementText).fadeIn(pgwSlider.config.transitionDuration / 2);
+                    } else {
+                        pgwSlider.plugin.find('.ps-current > span').html(elementText).show();
+                    }
                 }
 
                 // Set the container height
-                elementContainer.find('img').on('load', function() {
-                    if (typeof pgwSlider.plugin.find('.ps-current').attr('data-checked') == 'undefined' || pgwSlider.plugin.find('.ps-current').attr('data-checked') == null) {
-
-                        var maxHeight = pgwSlider.plugin.find('.ps-current img').height();
-                        updateHeight(maxHeight);
-                        pgwSlider.plugin.find('.ps-current').attr('data-checked', 'true');
-
-                        pgwSlider.window.resize(function() {
-                            var maxHeight = pgwSlider.plugin.find('.ps-current img').height();
-                            updateHeight(maxHeight);
-                        });
-
-                    } else if (pgwSlider.config.adaptiveHeight) {
-                        var maxHeight = pgwSlider.plugin.find('.ps-current img').height();
-                        updateHeight(maxHeight, true);
-                    }
-                });
-
-                // Display the new element
-                elementContainer.animate({
-                    opacity : 1,
-                }, pgwSlider.config.transitionDuration);
+                if (pgwSlider.config.adaptiveHeight) {
+                    var maxHeight = pgwSlider.plugin.find('.ps-current .elt_' + elementId + ' img').height();
+                    updateHeight(maxHeight, true);
+                }
             });
 
             // Reset interval to avoid a half interval after an API control
@@ -287,7 +380,7 @@
                     } else {
                         var nextItem = 1;
                     }
-                    displayCurrent(nextItem);
+                    displayElement(nextItem);
                 }, pgwSlider.config.intervalDuration);
             }
 
@@ -320,7 +413,7 @@
 
         // Display slide
         pgwSlider.displaySlide = function(itemId) {
-            displayCurrent(itemId, true);
+            displayElement(itemId, true);
             return true;
         };
 
@@ -331,7 +424,7 @@
             } else {
                 var nextItem = 1;
             }
-            displayCurrent(nextItem, true);
+            displayElement(nextItem, true);
             return true;
         };
 
@@ -342,7 +435,7 @@
             } else {
                 var previousItem = pgwSlider.slideCount;
             }
-            displayCurrent(previousItem, true);
+            displayElement(previousItem, true);
             return true;
         };
 
@@ -351,8 +444,13 @@
             clearInterval(pgwSlider.eventInterval);
 
             pgwSlider.plugin.find('ul li').each(function() {
-                $(this).unbind('click');
+                $(this).css('cursor', '').unbind('click').unbind('mouseenter');
+                $(this).find('a').css('cursor', '');
             });
+            
+            
+// todo: destroy resize ??
+            
 
             pgwSlider.data = [];
             pgwSlider.config = {};
