@@ -8,23 +8,15 @@
  */
 ;(function($){
     $.fn.pgwSlider = function(options) {
-    
-    
-    
-    
-    ////////////
-        // add callback before / after slide
-    ////////////
-    
-    
-    
 
         var defaults = {
             mainClassName : 'pgwSlider',
             listPosition : 'right',
             selectionMode : 'click',
-            maxHeight : false,
             autoSlide : true,
+            beforeSlide : false,
+            afterSlide : false,
+            maxHeight : false,
             adaptiveHeight : false,
             adaptiveDuration : 200,
             transitionDuration : 600,
@@ -272,6 +264,11 @@
                 throw new Error('PgwSlider - The element ' + elementId + ' is undefined');
                 return false;
             }
+            
+            // Before slide
+            if (typeof pgwSlider.config.beforeSlide == 'function') {
+                pgwSlider.config.beforeSlide(elementId);
+            }
 
             // Display new element
             pgwSlider.plugin.find('.ps-list > li').css('opacity', '0.6');
@@ -359,6 +356,11 @@
                     } else {
                         pgwSlider.plugin.find('.ps-current > span').html(elementText).show();
                     }
+                }
+                
+                // After slide
+                if (typeof pgwSlider.config.afterSlide == 'function') {
+                    pgwSlider.config.afterSlide(elementId);
                 }
 
                 // Set the container height
