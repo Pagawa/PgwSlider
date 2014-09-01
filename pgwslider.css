@@ -35,6 +35,21 @@
     width: 100%;
 }
 
+.pgwSlider .ps-current li {
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+    opacity: 0;
+    display: none;
+}
+
+.pgwSlider .ps-current img {
+    max-width: 100%;
+    min-width: 100%;
+    height: auto;
+    display: block;
+}
+
 .pgwSlider .ps-caption {
     position: absolute;
     width: 100%;
@@ -44,13 +59,6 @@
     bottom: 0;
     display: none;
     z-index: 3;
-}
-
-.pgwSlider .ps-current img {
-    max-width: 100%;
-    min-width: 100%;
-    height: auto;
-    display: block;
 }
 
 ul.pgwSlider,

@@ -23,7 +23,7 @@
             mainClassName : 'pgwSlider',
             listPosition : 'right',
             selectionMode : 'click',
-            maxHeight : 300,
+            maxHeight : false,
             autoSlide : true,
             adaptiveHeight : false,
             adaptiveDuration : 200,
@@ -114,6 +114,17 @@
         // Update the current height
         var updateHeight = function(height, animate) {
 
+            // Check max-height
+            if (pgwSlider.config.maxHeight) {
+                if (pgwSlider.window.width() > 480 && height > pgwSlider.config.maxHeight) {
+                    height = pgwSlider.config.maxHeight;
+                } else if (pgwSlider.window.width() <= 480) {
+                    if (height + pgwSlider.plugin.find('.ps-list').height() > pgwSlider.config.maxHeight) {
+                        height = pgwSlider.config.maxHeight - pgwSlider.plugin.find('.ps-list').height();
+                    }
+                }
+            }
+
             // Adjust the height of the right list items
             var elementHeight = ((height - ((pgwSlider.slideCount - 1) * 6)) / pgwSlider.slideCount);            
             var elementWidth = (100 / pgwSlider.slideCount);
@@ -179,7 +190,7 @@
                 }
                 
                 // Set element in the current list
-                var currentElement = $('<li class="elt_' + elementId + '" style="position:absolute; width:100%; z-index:1; opacity: 0; display:none;"></li>');
+                var currentElement = $('<li class="elt_' + elementId + '"></li>');
 
                 if (element.image) {
                     currentElement.html('<img src="' + element.image + '" alt="' + (element.title ? element.title : '') + '">');
@@ -207,10 +218,6 @@
                         displayElement(element.id);
                     });
                 }
-
-
-//   max-height:'+ pgwSlider.config.maxHeight +'px; overflow:hidden
-// virer max-height + overflow si maxHeight == false ou null;
 
                 elementId++;
             });
@@ -243,7 +250,7 @@
             
             
             
-// todo:  add timeout pr ne le faire qu'a la fin et pas X fois, ce qui rend l'effet naze
+// todo:  add timeout pr ne le faire qu'a la fin et pas X fois, ce qui rend l'effet moyen si adaptiveheight
 
 
 
