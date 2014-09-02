@@ -13,6 +13,7 @@
             mainClassName : 'pgwSlider',
             listPosition : 'right',
             selectionMode : 'click',
+            verticalAlign : 'center',
             autoSlide : true,
             beforeSlide : false,
             afterSlide : false,
@@ -39,6 +40,8 @@
         pgwSlider.currentSlide = 0;
         pgwSlider.slideCount = 0;
         pgwSlider.eventInterval = null;
+        pgwSlider.eventResize = null;
+        pgwSlider.eventAdaptive = null;
         pgwSlider.window = $(window);
 
         // Init
@@ -123,26 +126,61 @@
             pgwSlider.plugin.find('.ps-list > li').css({ width: elementWidth + '%' });
 
             // Adjust the height of the main container
-            if (typeof animate != 'undefined' && animate) {
-                pgwSlider.plugin.find('.ps-current').animate({
-                    height: height
-                }, pgwSlider.config.adaptiveDuration, function() {
-                    pgwSlider.plugin.find('.ps-list > li').animate({ height: elementHeight }, pgwSlider.config.adaptiveDuration);
-                });
+            if (typeof animate != 'undefined' && animate && pgwSlider.config.maxHeight == false) {
+            
+                clearTimeout(pgwSlider.eventAdaptive);
+                pgwSlider.eventAdaptive = setTimeout(function() {
+                
+                    pgwSlider.plugin.find('.ps-current').animate({
+                        height: height
+                    }, pgwSlider.config.adaptiveDuration, function() {
+                        pgwSlider.plugin.find('.ps-list > li').animate({ height: elementHeight }, pgwSlider.config.adaptiveDuration);
+                    });
+                    
+                }, 100);
 
             } else {
                 pgwSlider.plugin.find('.ps-current').css('height', height);
                 pgwSlider.plugin.find('.ps-list > li').css('height', elementHeight);
             }
 
-            
-            /*
-            $('.ps-list li').each(function(){
-  blu = Math.round(($(this).find('img').height() - $(this).height()) / 2);
-  console.log(blu);
-  $(this).find('img').css('margin-top', -blu);
-});
-            */            
+            // Vertical alignement
+            if (pgwSlider.config.verticalAlign == 'center') {
+                clearTimeout(pgwSlider.eventResize);
+                pgwSlider.eventResize = setTimeout(function() {
+
+                    // List elements
+                    pgwSlider.plugin.find('.ps-list > li').each(function(){
+                        if ($(this).find('img').height() > elementHeight) {
+                            var imageMargin = Math.round(($(this).find('img').height() - elementHeight) / 2);
+                            $(this).find('img').css('margin-top', -imageMargin);
+                        } else {
+                            $(this).find('img').css('margin-top', '');
+                        }
+                    });
+
+                    // Current elements
+                    pgwSlider.plugin.find('.ps-current > ul > li').each(function(){
+                        var isVisible = ($(this).css('display') == 'none') ? false : true;
+
+                        if (! isVisible) {
+                            $(this).show();
+                        }
+
+                        if ($(this).show().find('img').height() > height) {
+                            var imageMargin = Math.round(($(this).find('img').height() - height) / 2);
+                            $(this).find('img').css('margin-top', -imageMargin);
+                        } else {
+                            $(this).find('img').css('margin-top', '');
+                        }
+
+                        if (! isVisible) {
+                            $(this).hide();
+                        }
+                    });
+                
+                }, 200);
+            }
             
             return true;
         };
@@ -236,19 +274,12 @@
             // Set the first height
             pgwSlider.plugin.find('.ps-current > ul > li.elt_1 > img').on('load', function() {
                 var maxHeight = pgwSlider.plugin.find('.ps-current > ul > li.elt_1 > img').height();
-                updateHeight(maxHeight);             
-            });
+                updateHeight(maxHeight);
 
-            
-            
-            
-// todo:  add timeout pr ne le faire qu'a la fin et pas X fois, ce qui rend l'effet moyen si adaptiveheight
-
-
-
-            pgwSlider.window.resize(function() {
-                var maxHeight = pgwSlider.plugin.find('.ps-current .elt_' + pgwSlider.currentSlide + ' img').height();
-                updateHeight(maxHeight, pgwSlider.config.adaptiveHeight);
+                pgwSlider.window.resize(function() {
+                    var maxHeight = pgwSlider.plugin.find('.ps-current .elt_' + pgwSlider.currentSlide + ' img').height();
+                    updateHeight(maxHeight, pgwSlider.config.adaptiveHeight);
+                });
             });
 
             return true;
@@ -273,10 +304,6 @@
             // Display new element
             pgwSlider.plugin.find('.ps-list > li').css('opacity', '0.6');
             pgwSlider.plugin.find('.ps-list > li.elt_' + elementId).css('opacity', '1');
-            
-            
-// todo: add transition en css ???
-
 
             elementContainer.find('li').not('.elt_' + pgwSlider.currentSlide).not('.elt_' + elementId).each(function(){
                 if (typeof $(this).stop == 'function') {
@@ -368,6 +395,7 @@
                     var maxHeight = pgwSlider.plugin.find('.ps-current .elt_' + elementId + ' img').height();
                     updateHeight(maxHeight, true);
                 }
+                
             });
 
             // Reset interval to avoid a half interval after an API control
@@ -456,10 +484,6 @@
                 $(this).css('cursor', '').unbind('click').unbind('mouseenter');
                 $(this).find('a').css('cursor', '');
             });
-            
-            
-// todo: destroy resize ??
-            
 
             pgwSlider.data = [];
             pgwSlider.config = {};
