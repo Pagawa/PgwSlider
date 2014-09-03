@@ -1,5 +1,5 @@
 /**
- * PgwSlider - Version 1.4
+ * PgwSlider - Version 2.0
  *
  * Copyright 2014, Jonathan M. Piat
  * http://pgwjs.com - http://pagawa.com
@@ -13,8 +13,8 @@
             mainClassName : 'pgwSlider',
             listPosition : 'right',
             selectionMode : 'click',
-            verticalAlign : 'center',
             autoSlide : true,
+            verticalCentering : false,
             beforeSlide : false,
             afterSlide : false,
             maxHeight : false,
@@ -57,7 +57,7 @@
             if (pgwSlider.config.autoSlide) {
                 activateInterval();
             }
-            
+
             return true;
         };
 
@@ -109,7 +109,7 @@
         // Update the current height
         var updateHeight = function(height, animate) {
 
-            // Check max-height
+            // Check maxHeight
             if (pgwSlider.config.maxHeight) {
                 if (pgwSlider.window.width() > 480 && height > pgwSlider.config.maxHeight) {
                     height = pgwSlider.config.maxHeight;
@@ -120,22 +120,26 @@
                 }
             }
 
-            // Adjust the height of the right list items
+            // Adjust right list
             var elementHeight = ((height - ((pgwSlider.slideCount - 1) * 6)) / pgwSlider.slideCount);            
             var elementWidth = (100 / pgwSlider.slideCount);
             pgwSlider.plugin.find('.ps-list > li').css({ width: elementWidth + '%' });
 
-            // Adjust the height of the main container
-            if (typeof animate != 'undefined' && animate && pgwSlider.config.maxHeight == false) {
-            
+            // Adjust main container
+            if (typeof animate != 'undefined' && animate && pgwSlider.config.maxHeight == false) {            
                 clearTimeout(pgwSlider.eventAdaptive);
                 pgwSlider.eventAdaptive = setTimeout(function() {
                 
-                    pgwSlider.plugin.find('.ps-current').animate({
-                        height: height
-                    }, pgwSlider.config.adaptiveDuration, function() {
-                        pgwSlider.plugin.find('.ps-list > li').animate({ height: elementHeight }, pgwSlider.config.adaptiveDuration);
-                    });
+                    if (typeof pgwSlider.plugin.find('.ps-current').animate == 'function') {
+                        pgwSlider.plugin.find('.ps-current').animate({
+                            height: height
+                        }, pgwSlider.config.adaptiveDuration, function() {
+                            pgwSlider.plugin.find('.ps-list > li').animate({ height: elementHeight }, pgwSlider.config.adaptiveDuration);
+                        });
+                    } else {
+                        pgwSlider.plugin.find('.ps-current').css('height', height);
+                        pgwSlider.plugin.find('.ps-list > li').css('height', elementHeight);
+                    }
                     
                 }, 100);
 
@@ -145,13 +149,13 @@
             }
 
             // Vertical alignement
-            if (pgwSlider.config.verticalAlign == 'center') {
+            if (pgwSlider.config.verticalCentering) {
                 clearTimeout(pgwSlider.eventResize);
                 pgwSlider.eventResize = setTimeout(function() {
 
                     // List elements
                     pgwSlider.plugin.find('.ps-list > li').each(function(){
-                        if ($(this).find('img').height() > elementHeight) {
+                        if ((elementHeight > 50) && ($(this).find('img').height() > elementHeight)) {
                             var imageMargin = Math.round(($(this).find('img').height() - elementHeight) / 2);
                             $(this).find('img').css('margin-top', -imageMargin);
                         } else {
@@ -181,7 +185,19 @@
                 
                 }, 200);
             }
-            
+
+            return true;
+        };
+
+        // Set size class
+        var setSizeClass = function() {
+
+            if (pgwSlider.plugin.width() <= 480) {
+                pgwSlider.plugin.addClass('narrow').removeClass('wide');
+            } else {
+                pgwSlider.plugin.addClass('wide').removeClass('narrow');
+            }
+
             return true;
         };
 
@@ -194,7 +210,7 @@
             pgwSlider.plugin = pgwSlider.plugin.parent();
             pgwSlider.plugin.prepend('<div class="ps-current"><ul></ul><span class="ps-caption"></span></div>');
             pgwSlider.slideCount = pgwSlider.plugin.find('.ps-list > li').length;
-            
+
             if (pgwSlider.slideCount == 0) {
                 return false;
             }
@@ -218,7 +234,7 @@
                         $(this).find('img').after('<span>' + element.title + '</span>');
                     }
                 }
-                
+
                 // Set element in the current list
                 var currentElement = $('<li class="elt_' + elementId + '"></li>');
 
@@ -268,17 +284,20 @@
             }
 
             // Display the first element
-            pgwSlider.currentSlide = 1;
             displayElement(1);
 
             // Set the first height
             pgwSlider.plugin.find('.ps-current > ul > li.elt_1 > img').on('load', function() {
+                setSizeClass();
+
                 var maxHeight = pgwSlider.plugin.find('.ps-current > ul > li.elt_1 > img').height();
                 updateHeight(maxHeight);
 
                 pgwSlider.window.resize(function() {
                     var maxHeight = pgwSlider.plugin.find('.ps-current .elt_' + pgwSlider.currentSlide + ' img').height();
                     updateHeight(maxHeight, pgwSlider.config.adaptiveHeight);
+
+                    setSizeClass();
                 });
             });
 
@@ -288,6 +307,10 @@
         // Display the current element
         var displayElement = function(elementId, apiController) {
 
+            if (elementId == pgwSlider.currentSlide) {
+                return false;
+            }
+
             var element = pgwSlider.data[elementId - 1];
             var elementContainer = pgwSlider.plugin.find('.ps-current > ul');
 
@@ -295,7 +318,7 @@
                 throw new Error('PgwSlider - The element ' + elementId + ' is undefined');
                 return false;
             }
-            
+
             // Before slide
             if (typeof pgwSlider.config.beforeSlide == 'function') {
                 pgwSlider.config.beforeSlide(elementId);
@@ -319,27 +342,31 @@
             }
 
             // Current element
-            var currentElement = elementContainer.find('.elt_' + pgwSlider.currentSlide);
+            if (pgwSlider.currentSlide > 0) {
+                var currentElement = elementContainer.find('.elt_' + pgwSlider.currentSlide);
 
-            if (typeof currentElement.animate != 'function') {
-                currentElement.animate = function(css, duration, callback) {
-                    currentElement.css(css);
-                    if (callback) {
-                        callback();
-                    }
-                };
+                if (typeof currentElement.animate != 'function') {
+                    currentElement.animate = function(css, duration, callback) {
+                        currentElement.css(css);
+                        if (callback) {
+                            callback();
+                        }
+                    };
+                }
+
+                if (typeof currentElement.stop == 'function') {
+                    currentElement.stop();
+                }
+
+                currentElement.css('position', 'absolute').animate({
+                    opacity : 0,
+                }, pgwSlider.config.transitionDuration, function() {
+                    currentElement.css('position', '').css('z-index', 1).hide();
+                });
             }
 
-            if (typeof currentElement.stop == 'function') {
-                currentElement.stop();
-            }
-
-            currentElement.css('position', 'absolute').animate({
-                opacity : 0,
-            }, pgwSlider.config.transitionDuration, function() {
-                currentElement.css('position', '').css('z-index', 1).hide();
-                pgwSlider.currentSlide = elementId;
-            });
+            // Update current id
+            pgwSlider.currentSlide = elementId;
 
             // Next element
             var nextElement = elementContainer.find('.elt_' + elementId);
@@ -384,7 +411,7 @@
                         pgwSlider.plugin.find('.ps-current > span').html(elementText).show();
                     }
                 }
-                
+
                 // After slide
                 if (typeof pgwSlider.config.afterSlide == 'function') {
                     pgwSlider.config.afterSlide(elementId);
@@ -395,7 +422,6 @@
                     var maxHeight = pgwSlider.plugin.find('.ps-current .elt_' + elementId + ' img').height();
                     updateHeight(maxHeight, true);
                 }
-                
             });
 
             // Reset interval to avoid a half interval after an API control
@@ -480,24 +506,27 @@
         pgwSlider.destroy = function(soft) {
             clearInterval(pgwSlider.eventInterval);
 
-            pgwSlider.plugin.find('ul li').each(function() {
-                $(this).css('cursor', '').unbind('click').unbind('mouseenter');
-                $(this).find('a').css('cursor', '');
-            });
+            if (typeof soft != 'undefined') {
+                pgwSlider.plugin.find('.ps-list > li').each(function() {
+                    $(this).attr('style', '').removeClass().css('cursor', '').unbind('click').unbind('mouseenter');
+                    $(this).find('a').css('cursor', '');
+                });
 
+                pgwSlider.plugin.find('.ps-list').addClass(pgwSlider.config.mainClassName).removeClass('ps-list');
+                pgwSlider.plugin.find('.ps-current').unwrap().remove();
+                pgwSlider.hide();
+
+            } else {
+                pgwSlider.parent().remove();
+            }
+
+            pgwSlider.plugin = null;
             pgwSlider.data = [];
             pgwSlider.config = {};
             pgwSlider.currentSlide = 0;
             pgwSlider.slideCount = 0;
             pgwSlider.eventInterval = null;
             pgwSlider.window = null;
-
-            if (typeof soft != 'undefined') {
-                pgwSlider.plugin.find('.ps-current').unwrap().remove();
-                pgwSlider.hide();
-            } else {
-                pgwSlider.parent().remove();
-            }
 
             return true;
         };

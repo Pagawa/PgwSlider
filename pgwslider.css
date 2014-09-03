@@ -1,5 +1,5 @@
 /**
- * PgwSlider - Version 1.4
+ * PgwSlider - Version 2.0
  *
  * Copyright 2014, Jonathan M. Piat
  * http://pgwjs.com - http://pagawa.com
@@ -36,7 +36,6 @@
 }
 
 .pgwSlider .ps-current li {
-    position: absolute;
     width: 100%;
     z-index: 1;
     opacity: 0;
@@ -48,6 +47,7 @@
     min-width: 100%;
     height: auto;
     display: block;
+    transition: margin-top 250ms linear;
 }
 
 .pgwSlider .ps-caption {
@@ -55,6 +55,7 @@
     width: 100%;
     padding: 12px;
     background: rgba(0, 0, 0, 0.7);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000,endColorstr=#99000000);
     left: 0;
     bottom: 0;
     display: none;
@@ -84,6 +85,7 @@ ul.pgwSlider > li,
     opacity: 0.6;
     filter: alpha(opacity=60);
     font-size: 0.8rem;
+    transition: opacity 200ms linear;
 }
 
 ul.pgwSlider > li:last-child,
@@ -99,6 +101,7 @@ ul.pgwSlider > li span,
     bottom: 0;
     padding: 5px;
     background: rgba(0, 0, 0, 0.7);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000,endColorstr=#99000000);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -114,48 +117,48 @@ ul.pgwSlider > li img,
     width: 100%;
     min-height: 100%;
     display: block;
+    transition: margin-top 250ms linear;
 }
 
-@media (min-width: 481px) {
-    ul.pgwSlider > li,
-    .pgwSlider > ul > li {
-        width: 100% !important;
-    }
+/*
+ * The media-queries are not used because IE8 doesn't support them.
+ */
+ul.pgwSlider.wide > li,
+.pgwSlider.wide > ul > li {
+    width: 100% !important;
 }
 
-@media (max-width: 480px) {
-    .pgwSlider .ps-current {
-        margin-bottom: 6px;
-        font-size: 0.8rem;
-    }
+.pgwSlider.narrow .ps-current {
+    margin-bottom: 6px;
+    font-size: 0.8rem;
+}
 
-    .pgwSlider .ps-current img {
-        width: 100%;
-        min-height: inherit;
-    }
+.pgwSlider.narrow .ps-current img {
+    width: 100%;
+    min-height: inherit;
+}
 
-    .pgwSlider .ps-current,
-    ul.pgwSlider,
-    .pgwSlider > ul {
-        width: 100%;
-    }
+.pgwSlider.narrow .ps-current,
+ul.pgwSlider.narrow,
+.pgwSlider.narrow > ul {
+    width: 100%;
+}
 
-    ul.pgwSlider > li,
-    .pgwSlider > .ps-list > li {
-        float: left;
-        min-height: 50px;
-        max-height: 70px;
-        min-width: 15%;
-        font-size: 0.7rem;
-        margin-bottom: 0;
-    }
-    
-    ul.pgwSlider.listOnTheLeft > li,
-    .pgwSlider.listOnTheLeft > ul > li {
-        float: right;
-    }
-    
-    .pgwSlider .ps-caption {
-        padding: 8px;
-    }
+ul.pgwSlider.narrow > li,
+.pgwSlider.narrow > .ps-list > li {
+    float: left;
+    min-height: 50px;
+    max-height: 70px;
+    min-width: 15%;
+    font-size: 0.7rem;
+    margin-bottom: 0;
+}
+
+ul.pgwSlider.narrow.listOnTheLeft > li,
+.pgwSlider.narrow.listOnTheLeft > ul > li {
+    float: right;
+}
+
+.pgwSlider.narrow .ps-caption {
+    padding: 8px;
 }
