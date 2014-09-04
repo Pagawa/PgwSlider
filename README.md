@@ -1,7 +1,7 @@
 PgwSlider
 =========
 
-The full documentation and an example are available on [PgwJS.com](http://pgwjs.com/pgwslider/).
+The full documentation and an example are available on [**PgwJS.com**/PgwSlider](http://pgwjs.com/pgwslider/).
 
 
 Requirements
@@ -22,9 +22,16 @@ All issues or pull requests must be submitted through GitHub.
 ChangeLog
 ---------
 
-* 2014-08-01 - Optimization of animation transition (Version 1.4)
-* 2014-07-02 - Fixes for Zepto (Version 1.3)
-* 2014-05-29 - CSS fixes (Version 1.2.2)
-* 2014-05-09 - Slider API with 9 new functions. View details on [PgwJS.com](http://pgwjs.com/pgwslider/) (Version 1.2)
-* 2014-03-22 - Even simpler initialization and the "Data-title" parameter becomes "alt" (Version 1.1.1)
-* 2014-03-21 - Cleaning code and adding new options (Version 1.1)
+* Version 2 (newest)
+    * 2014-09-04 - The version 2.0 has been released, it brings improvements and new functionalities:
+        - Refactoring HTML and CSS.
+        - Improved compatibility for IE8.
+        - 6 new functionalities: "listPosition", "selectionMode", "verticalCentering", "beforeSlide", "afterSlide" and "maxHeight".
+
+* Version 1 (deprecated)
+    * 2014-08-01 - Optimization of animation transition (Version 1.4)
+    * 2014-07-02 - Fixes for Zepto (Version 1.3)
+    * 2014-05-29 - CSS fixes (Version 1.2.2)
+    * 2014-05-09 - Slider API with 9 new functions. View details on [PgwJS.com](http://pgwjs.com/pgwslider/) (Version 1.2)
+    * 2014-03-22 - Even simpler initialization and the "Data-title" parameter becomes "alt" (Version 1.1.1)
+    * 2014-03-21 - Cleaning code and adding new options (Version 1.1)

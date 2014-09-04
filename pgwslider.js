@@ -15,9 +15,9 @@
             selectionMode : 'click',
             autoSlide : true,
             verticalCentering : false,
-            beforeSlide : false,
-            afterSlide : false,
-            maxHeight : false,
+            beforeSlide : null,
+            afterSlide : null,
+            maxHeight : null,
             adaptiveHeight : false,
             adaptiveDuration : 200,
             transitionDuration : 600,
@@ -121,15 +121,15 @@
             }
 
             // Adjust right list
-            var elementHeight = ((height - ((pgwSlider.slideCount - 1) * 6)) / pgwSlider.slideCount);            
+            var elementHeight = ((height - ((pgwSlider.slideCount - 1) * 6)) / pgwSlider.slideCount);
             var elementWidth = (100 / pgwSlider.slideCount);
             pgwSlider.plugin.find('.ps-list > li').css({ width: elementWidth + '%' });
 
             // Adjust main container
-            if (typeof animate != 'undefined' && animate && pgwSlider.config.maxHeight == false) {            
+            if (typeof animate != 'undefined' && animate && pgwSlider.config.maxHeight == false) {
                 clearTimeout(pgwSlider.eventAdaptive);
                 pgwSlider.eventAdaptive = setTimeout(function() {
-                
+
                     if (typeof pgwSlider.plugin.find('.ps-current').animate == 'function') {
                         pgwSlider.plugin.find('.ps-current').animate({
                             height: height
@@ -140,7 +140,7 @@
                         pgwSlider.plugin.find('.ps-current').css('height', height);
                         pgwSlider.plugin.find('.ps-list > li').css('height', elementHeight);
                     }
-                    
+
                 }, 100);
 
             } else {
@@ -182,7 +182,7 @@
                             $(this).hide();
                         }
                     });
-                
+
                 }, 200);
             }
 
@@ -294,10 +294,11 @@
                 updateHeight(maxHeight);
 
                 pgwSlider.window.resize(function() {
+                    // The new class must be set before the recalculation of the height.
+                    setSizeClass();
+
                     var maxHeight = pgwSlider.plugin.find('.ps-current .elt_' + pgwSlider.currentSlide + ' img').height();
                     updateHeight(maxHeight, pgwSlider.config.adaptiveHeight);
-
-                    setSizeClass();
                 });
             });
 
