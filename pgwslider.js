@@ -158,6 +158,11 @@
                         if ((elementHeight > 50) && ($(this).find('img').height() > elementHeight)) {
                             var imageMargin = Math.round(($(this).find('img').height() - elementHeight) / 2);
                             $(this).find('img').css('margin-top', -imageMargin);
+
+                        } else if ($(this).find('img').height() < elementHeight) {
+                            var imageMargin = Math.round((elementHeight - $(this).find('img').height()) / 2);
+                            $(this).find('img').css('margin-top', imageMargin);
+
                         } else {
                             $(this).find('img').css('margin-top', '');
                         }
@@ -174,6 +179,11 @@
                         if ($(this).show().find('img').height() > height) {
                             var imageMargin = Math.round(($(this).find('img').height() - height) / 2);
                             $(this).find('img').css('margin-top', -imageMargin);
+
+                        } else if ($(this).show().find('img').height() < height) {
+                            var imageMargin = Math.round((height - $(this).find('img').height()) / 2);
+                            $(this).find('img').css('margin-top', imageMargin);
+
                         } else {
                             $(this).find('img').css('margin-top', '');
                         }
@@ -288,17 +298,17 @@
             displayElement(1);
 
             // Set the first height
-            pgwSlider.plugin.find('.ps-current > ul > li.elt_1 > img').on('load', function() {
+            pgwSlider.plugin.find('.ps-current > ul > li.elt_1 img').on('load', function() {
                 setSizeClass();
 
-                var maxHeight = pgwSlider.plugin.find('.ps-current > ul > li.elt_1 > img').height();
+                var maxHeight = pgwSlider.plugin.find('.ps-current > ul > li.elt_1 img').height();
                 updateHeight(maxHeight);
 
                 pgwSlider.window.resize(function() {
                     // The new class must be set before the recalculation of the height.
                     setSizeClass();
 
-                    var maxHeight = pgwSlider.plugin.find('.ps-current .elt_' + pgwSlider.currentSlide + ' img').height();
+                    var maxHeight = pgwSlider.plugin.find('.ps-current > ul > li.elt_' + pgwSlider.currentSlide + ' img').height();
                     updateHeight(maxHeight, pgwSlider.config.adaptiveHeight);
                 });
             });
