@@ -212,6 +212,7 @@
             pgwSlider.slideCount = pgwSlider.plugin.find('.ps-list > li').length;
 
             if (pgwSlider.slideCount == 0) {
+                throw new Error('PgwSlider - No slider item has been found');
                 return false;
             }
 
