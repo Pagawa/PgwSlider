@@ -23,6 +23,7 @@ ChangeLog
 ---------
 
 * Version 2 (newest)
+    * 2014-09-07 - 4 new functionalities: "transitionEffect", "displayList", "displayControls" and "touchControls". View details on [PgwJS.com](http://pgwjs.com/pgwslider/#documentation) (Version 2.1)
     * 2014-09-04 - The version 2.0 has been released, it brings improvements and new functionalities:
         - Refactoring HTML and CSS.
         - Improved compatibility for IE8.
