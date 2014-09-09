@@ -1,5 +1,5 @@
 /**
- * PgwSlider - Version 2.1
+ * PgwSlider - Version 2.2
  *
  * Copyright 2014, Jonathan M. Piat
  * http://pgwjs.com - http://pagawa.com
@@ -135,7 +135,7 @@
                 pgwSlider.plugin.find('.ps-list > li').css({ width: elementWidth + '%' });
 
                 // Adjust main container
-                if (typeof animate != 'undefined' && animate && pgwSlider.config.maxHeight == false) {
+                if (typeof animate != 'undefined' && animate && pgwSlider.config.maxHeight == null) {
 
                     if (typeof pgwSlider.plugin.find('.ps-current').animate == 'function') {
                         pgwSlider.plugin.find('.ps-current').animate({
@@ -498,7 +498,7 @@
                 }).show();
                 pgwSlider.plugin.find('.ps-list > li.elt_1').css('opacity', '1');
                 finishElement(element);
-            
+
             } else {
 
                 if (pgwSlider.transitionInProgress) {
@@ -506,10 +506,10 @@
                 }
 
                 pgwSlider.transitionInProgress = true;
-                
+
                 // Get direction details
                 var elementWidth = elementContainer.width();
-                
+
                 if (direction == 'left') {
                     var elementDest = -elementWidth;
                     var nextOrigin = elementWidth;
@@ -689,6 +689,7 @@
                 pgwSlider.plugin.find('.ps-list > li').each(function() {
                     $(this).attr('style', '').removeClass().css('cursor', '').unbind('click').unbind('mouseenter');
                     $(this).find('a').css('cursor', '');
+                    $(this).find('img').attr('style', '');
                 });
 
                 pgwSlider.plugin.find('.ps-list').addClass(pgwSlider.config.mainClassName).removeClass('ps-list');
