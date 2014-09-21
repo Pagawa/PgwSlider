@@ -1,5 +1,5 @@
 /**
- * PgwSlider - Version 2.2
+ * PgwSlider - Version 2.3
  *
  * Copyright 2014, Jonathan M. Piat
  * http://pgwjs.com - http://pagawa.com
@@ -143,7 +143,7 @@ ul.pgwSlider > li img,
     position: absolute;
     padding: 20px 20px 20px 17px;
     left: 0;
-    top: 40%;
+    top: 45%;
     cursor: pointer;
 }
 
@@ -157,7 +157,7 @@ ul.pgwSlider > li img,
     position: absolute;
     padding: 20px 17px 20px 20px;
     right: 0;
-    top: 40%;
+    top: 45%;
     cursor: pointer;
 }
 
@@ -206,10 +206,10 @@ ul.pgwSlider.narrow.listOnTheLeft > li,
 
 .pgwSlider.narrow .ps-current .ps-prev {
     padding: 15px 15px 15px 12px;
-    top: 35%;
+    top: 40%;
 }
 
 .pgwSlider.narrow .ps-current .ps-next {
     padding: 15px 12px 15px 15px;
-    top: 35%;
+    top: 40%;
 }

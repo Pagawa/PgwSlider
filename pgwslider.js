@@ -1,5 +1,5 @@
 /**
- * PgwSlider - Version 2.2
+ * PgwSlider - Version 2.3
  *
  * Copyright 2014, Jonathan M. Piat
  * http://pgwjs.com - http://pagawa.com
@@ -240,7 +240,7 @@
                     pgwSlider.nextSlide();
                 });
             }
-            
+
             // Disable list
             if (! pgwSlider.config.displayList) {
                 pgwSlider.plugin.find('.ps-current').css('width', '100%');
@@ -367,13 +367,13 @@
                     pgwSlider.touchFirstPosition = null;
                 });
             }
-            
+
             return true;
         };
 
-        // Setup
+        // Finish element
         var finishElement = function(element) {
-        
+
             // Element caption
             var elementText = '';
             if (element.title) {
@@ -390,12 +390,21 @@
                     elementText = '<a href="' + element.link + '"' + (element.linkTarget ? ' target="' + element.linkTarget + '"' : '') + '>' + elementText + '</a>';
                 }
 
-                if (typeof pgwSlider.plugin.find('.ps-caption').fadeOut == 'function') {
+                if (typeof pgwSlider.plugin.find('.ps-caption').fadeIn == 'function') {
                     pgwSlider.plugin.find('.ps-caption').html(elementText);
-                    pgwSlider.plugin.find('.ps-caption, .ps-prev, .ps-next').fadeIn(pgwSlider.config.transitionDuration / 2);
+                    pgwSlider.plugin.find('.ps-caption').fadeIn(pgwSlider.config.transitionDuration / 2);
                 } else {
                     pgwSlider.plugin.find('.ps-caption').html(elementText);
-                    pgwSlider.plugin.find('.ps-caption, .ps-prev, .ps-next').show();
+                    pgwSlider.plugin.find('.ps-caption').show();
+                }
+            }
+
+            // Slider controls
+            if (pgwSlider.config.displayControls) {
+                if (typeof pgwSlider.plugin.find('.ps-current > .ps-prev').fadeIn == 'function') {
+                    pgwSlider.plugin.find('.ps-current > .ps-prev, .ps-current > .ps-next').fadeIn(pgwSlider.config.transitionDuration / 2);
+                } else {
+                    pgwSlider.plugin.find('.ps-current > .ps-prev, .ps-current > .ps-next').show();
                 }
             }
 
@@ -687,9 +696,9 @@
 
             if (typeof soft != 'undefined') {
                 pgwSlider.plugin.find('.ps-list > li').each(function() {
-                    $(this).attr('style', '').removeClass().css('cursor', '').unbind('click').unbind('mouseenter');
+                    $(this).attr('style', null).removeClass().css('cursor', '').unbind('click').unbind('mouseenter');
                     $(this).find('a').css('cursor', '');
-                    $(this).find('img').attr('style', '');
+                    $(this).find('img').attr('style', null);
                 });
 
                 pgwSlider.plugin.find('.ps-list').addClass(pgwSlider.config.mainClassName).removeClass('ps-list');
