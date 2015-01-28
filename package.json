@@ -2,7 +2,7 @@
   "name": "pgwslider",
   "title": "PgwSlider",
   "description": "Responsive and lightweight Slider plugin for jQuery / Zepto",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "main": "pgwslider.js",
   "homepage": "https://pgwjs.com/pgwslider",
   "author": "Jonathan M. Piat",
