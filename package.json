@@ -1,0 +1,33 @@
+{
+  "name": "pgwslider",
+  "title": "PgwSlider",
+  "description": "Responsive and lightweight Slider plugin for jQuery / Zepto",
+  "version": "2.3.0",
+  "main": "pgwslider.js",
+  "homepage": "https://pgwjs.com/pgwslider",
+  "author": "Jonathan M. Piat",
+  "license" : "GNU GPLv3",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pagawa/PgwSlider.git"
+  },
+  "keywords": [
+    "slider",
+    "slideshow",
+    "gallery",
+    "responsive",
+    "mobile",
+    "image",
+    "animation",
+    "ui",
+    "jquery",
+    "jquery-plugin",
+    "zepto"
+  ],
+  "bugs": {
+    "url": "https://github.com/Pagawa/PgwSlider/issues"
+  },
+  "dependencies": {
+    "jquery": ">=1.0.0"
+  }
+}
