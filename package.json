@@ -26,8 +26,5 @@
   ],
   "bugs": {
     "url": "https://github.com/Pagawa/PgwSlider/issues"
-  },
-  "dependencies": {
-    "jquery": ">=1.0.0"
   }
 }
