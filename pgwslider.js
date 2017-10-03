@@ -92,7 +92,7 @@
             }
 
             // Get title 
-            var elementSpan = obj.find('span').text();
+            var elementSpan = obj.find('span.pgwSlideTitle').text();
             if ((typeof elementSpan != 'undefined') && (elementSpan != '') && (elementSpan != null)) {
                 element.title = elementSpan;
             } else {
@@ -103,8 +103,8 @@
             }
 
             // Get description
-            var elementDescription = obj.find('img').attr('data-description');
-            if ((typeof elementDescription != 'undefined') && (elementDescription != '')) {
+            var elementDescription = obj.find('span.pgwSlideDescription').text();
+            if ((typeof elementDescription != 'undefined') && (elementDescription != '') && (elementSpan != null)) {
                 element.description = elementDescription;
             }
 
@@ -221,7 +221,7 @@
             pgwSlider.plugin.removeClass(pgwSlider.config.mainClassName).addClass('ps-list');
             pgwSlider.plugin.wrap('<div class="' + pgwSlider.config.mainClassName + '"></div>');
             pgwSlider.plugin = pgwSlider.plugin.parent();
-            pgwSlider.plugin.prepend('<div class="ps-current"><ul></ul><span class="ps-caption"></span></div>');
+            pgwSlider.plugin.prepend('<div class="ps-current"><ul></ul><span class="ps-caption"></span><span class="ps-long-description"></span></div>');
             pgwSlider.slideCount = pgwSlider.plugin.find('.ps-list > li').length;
 
             if (pgwSlider.slideCount == 0) {
@@ -251,19 +251,23 @@
             var elementId = 1;
             pgwSlider.plugin.find('.ps-list > li').each(function() {
                 var element = getElement($(this));
+
                 element.id = elementId;
                 pgwSlider.data.push(element);
 
                 $(this).addClass('elt_' + element.id);
 
+
+                $(this).find('span.pgwSlideDescription').remove();
+
                 // Check element title
                 if (element.title) {
-                    if ($(this).find('span').length == 1) {
-                        if ($(this).find('span').text() == '') {
-                            $(this).find('span').text(element.title);
+                    if ($(this).find('span.pgwSlideTitle').length == 1) {
+                        if ($(this).find('span.pgwSlideTitle').text() == '') {
+                            $(this).find('span.pgwSlideTitle').text('');
                         }
                     } else {
-                        $(this).find('img').after('<span>' + element.title + '</span>');
+                        $(this).find('img').after('<span class="pgwSlideTitle">' + element.title + '</span>');
                     }
                 }
 
@@ -275,6 +279,12 @@
                 } else if (element.thumbnail) {
                     currentElement.html('<img src="' + element.thumbnail + '" alt="' + (element.title ? element.title : '') + '">');
                 }
+
+
+                if(element.description){
+                    currentElement.html(currentElement.html() + '<div style="divcaption">' + element.description + '</div>');
+                }
+                console.log(element);
 
                 if (element.link) {
                     currentElement.html('<a href="' + element.link + '"' + (element.linkTarget ? ' target="' + element.linkTarget + '"' : '') + '>' + currentElement.html() + '</a>');
@@ -367,7 +377,6 @@
                     pgwSlider.touchFirstPosition = null;
                 });
             }
-
             return true;
         };
 
@@ -377,12 +386,12 @@
             // Element caption
             var elementText = '';
             if (element.title) {
-                elementText += '<b>' + element.title + '</b>';
+                elementText += '<h2>' + element.title + '</h2>';
             }
 
+            var elementDescription = '';
             if (element.description) {
-                if (elementText != '') elementText += '<br>';
-                elementText += element.description;
+                elementDescription += element.description;
             }
 
             if (elementText != '') {
@@ -392,9 +401,11 @@
 
                 if (typeof pgwSlider.plugin.find('.ps-caption').fadeIn == 'function') {
                     pgwSlider.plugin.find('.ps-caption').html(elementText);
+                    pgwSlider.plugin.find('.ps-long-description').html('<p class="ps-long-description-p">' + elementDescription + '</p>');
                     pgwSlider.plugin.find('.ps-caption').fadeIn(pgwSlider.config.transitionDuration / 2);
                 } else {
                     pgwSlider.plugin.find('.ps-caption').html(elementText);
+                    pgwSlider.plugin.find('.ps-long-description').html(elementDescription);
                     pgwSlider.plugin.find('.ps-caption').show();
                 }
             }
@@ -589,6 +600,7 @@
                 throw new Error('PgwSlider - The element ' + elementId + ' is undefined');
                 return false;
             }
+
 
             if (typeof direction == 'undefined') {
                 direction = 'left';

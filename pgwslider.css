@@ -7,7 +7,7 @@
  * Released under the GNU GPLv3 license - http://opensource.org/licenses/gpl-3.0
  */
 .pgwSlider {
-    width: 100%;
+    width: 70%;
     color: #fff;
 }
 
@@ -59,6 +59,30 @@
     bottom: 0;
     display: none;
     z-index: 3;
+}
+
+.ps-current:hover span.ps-long-description {
+    opacity: 1;
+}
+
+.pgwSlider .ps-long-description {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000,endColorstr=#99000000);
+    left: 0;
+    top: 0;
+    display: inline;
+    opacity: 0;
+    z-index: 2;
+    -webkit-transition: all 300ms ease-out;
+    -moz-transition: all 300ms ease-out;
+    transition: all 300ms ease-out;
+}
+
+.pgwSlider .ps-long-description p {
+    padding: 20px;
 }
 
 ul.pgwSlider,
